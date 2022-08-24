@@ -1,13 +1,86 @@
 // TODO: Include packages needed for this application
+const inquirer = require('inquirer')
+const createMarkDown = require('./utils/generateMarkdown')
+const fs =  require('fs')
 
 // TODO: Create an array of questions for user input
-const questions = [];
+const questions = [
+    {
+       type: 'input',
+       name: 'title',
+       message: 'Project Title'
+    },
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+    {
+        type: 'input',
+        name: 'description',
+        message: 'Project Description'
+    },
 
-// TODO: Create a function to initialize app
-function init() {}
+    {
+        type: 'input',
+        name: 'installation',
+        message: 'Instalation instructions?'
+    },
 
-// Function call to initialize app
-init();
+    {
+        type: 'input',
+        name: 'usage',
+        message: 'Project Usage'
+    },
+
+    {
+        type: 'input',
+        name: 'contribution',
+        message: 'Contribution info?'
+    },
+    
+    {
+        type: 'input',
+        name: 'email',
+        message: 'For questions(email)?'
+    },
+
+    {
+        type: 'input',
+        name: 'github',
+        message: 'For questions(github)'
+    },
+
+    {
+        type: 'list',
+        name: 'license',
+        message: 'License?',
+        choices:['MIT', 'ISC', 'GNUPLv3'],
+        filter(val){
+            return val.tol
+        }
+    },
+];
+
+
+function init(){
+    return inquirer.prompt(questions)
+        .then((answers) => {
+            const mark = createMarkDown(answers)
+            fs.writeFile('README.md', mark, function(err){
+                if(err){
+                    console.log("Could not save file");
+                } else { 
+                    console.log("Success: NEW README");
+                }
+            })
+            console.log(answers)
+            return answers
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+}
+
+//Function call to initialize the README App
+init()
+
+module.exports = questions;
+
+
